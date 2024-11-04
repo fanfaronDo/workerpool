@@ -12,7 +12,6 @@ type Worker struct {
 }
 
 func (w *Worker) Process(taskName string) {
-
-	time.Sleep(1 * time.Second)
+	time.Sleep(1 * time.Second) // Имитация нагрузки
 	slog.Info(fmt.Sprintf("Worker id is %d proccessed task: %s\n", w.Id, taskName))
 }

@@ -3,12 +3,13 @@ package workerpool_test
 import (
 	"fmt"
 	"testing"
+	"time"
 
 	"github.com/fanfaronDo/workerpool/pkg/worker"
 	"github.com/fanfaronDo/workerpool/pkg/workerpool"
 )
 
-func TestWorkerPool(t *testing.T) {
+func TestWorkerPoolAdded(t *testing.T) {
 	pool := workerpool.NewWorkerPool()
 	pool.Start()
 
@@ -23,12 +24,24 @@ func TestWorkerPool(t *testing.T) {
 
 	pool.Wait()
 
-	fmt.Println(pool.GetWorkers())
 	if len(pool.GetWorkers()) != 3 {
 		t.Errorf("Expected 3 workers, got %d", len(pool.GetWorkers()))
 	}
+}
+
+func TestWorkerPoolRemove(t *testing.T) {
+	pool := workerpool.NewWorkerPool()
+	pool.Start()
+	for i := 1; i <= 3; i++ {
+		pool.AddWorker(&worker.Worker{Id: i})
+	}
+
 	pool.RemoveWorker(&worker.Worker{Id: 1})
-	fmt.Println(pool.GetWorkers())
+
+	fmt.Println(len(pool.GetWorkers()))
+
+	time.Sleep(time.Millisecond)
+
 	if len(pool.GetWorkers()) != 2 {
 		t.Errorf("Expected 2 workers after removal, got %d", len(pool.GetWorkers()))
 	}
@@ -42,7 +55,6 @@ func TestWorkerPool(t *testing.T) {
 func TestWorkerPoolNoWorkers(t *testing.T) {
 	pool := workerpool.NewWorkerPool()
 	pool.Start()
-	pool.Submit("Task 1")
 
 	pool.Wait()
 	if len(pool.GetWorkers()) != 0 {

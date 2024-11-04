@@ -11,7 +11,7 @@ func main() {
 	pool := workerpool.NewWorkerPool()
 	pool.Start()
 
-	for i := 1; i <= 2; i++ {
+	for i := 1; i <= 5; i++ {
 		pool.AddWorker(&worker.Worker{Id: i})
 	}
 
@@ -21,11 +21,8 @@ func main() {
 
 	pool.Wait()
 
-	fmt.Println(pool.GetWorkers())
+	pool.RemoveWorker(&worker.Worker{Id: 2})
 
-	pool.RemoveWorker(&worker.Worker{Id: 1})
-
-	fmt.Println(pool.GetWorkers())
 	for i := 6; i <= 10; i++ {
 		pool.Submit(fmt.Sprintf("Task %d", i))
 	}

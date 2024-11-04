@@ -30,3 +30,15 @@
     - func (p *WorkerPool) Submit(task string) отправка задачи в пул. 
     - func (p *WorkerPool) Wait() Метод ожидания завершения всех задач. 
 
+
+Запуск тестового варианта:
+    
+    make run
+
+Сборка:
+
+    make build
+
+Запуск тестов:
+
+    make test
