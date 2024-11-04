@@ -1,18 +1,34 @@
 package main
 
 import (
-	"sync"
+	"fmt"
 
 	"github.com/fanfaronDo/workerpool/pkg/worker"
+	"github.com/fanfaronDo/workerpool/pkg/workerpool"
 )
 
 func main() {
-	wg := &sync.WaitGroup{}
-	for i := 0; i < 10; i++ {
-		wg.Add(1)
-		w := worker.Worker{}
-		w.Id = i
-		go w.Process("hell", wg)
+	pool := workerpool.NewWorkerPool()
+	pool.Start()
+
+	for i := 1; i <= 2; i++ {
+		pool.AddWorker(&worker.Worker{Id: i})
 	}
-	wg.Wait()
+
+	for i := 1; i <= 5; i++ {
+		pool.Submit(fmt.Sprintf("Task %d", i))
+	}
+
+	pool.Wait()
+
+	fmt.Println(pool.GetWorkers())
+
+	pool.RemoveWorker(&worker.Worker{Id: 1})
+
+	fmt.Println(pool.GetWorkers())
+	for i := 6; i <= 10; i++ {
+		pool.Submit(fmt.Sprintf("Task %d", i))
+	}
+
+	pool.Wait()
 }
